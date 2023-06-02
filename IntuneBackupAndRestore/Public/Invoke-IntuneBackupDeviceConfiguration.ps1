@@ -8,6 +8,9 @@ function Invoke-IntuneBackupDeviceConfiguration {
     
     .PARAMETER Path
     Path to store backup files
+
+    .PARAMETER DateFrom
+    Policies created after this date
     
     .EXAMPLE
     Invoke-IntuneBackupDeviceConfiguration -Path "C:\temp"

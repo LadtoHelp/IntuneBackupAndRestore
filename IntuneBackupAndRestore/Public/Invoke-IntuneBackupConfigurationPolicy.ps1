@@ -8,6 +8,9 @@ function Invoke-IntuneBackupConfigurationPolicy {
     
     .PARAMETER Path
     Path to store backup files
+
+    .PARAMETER DateFrom
+    Policies created after this date
     
     .EXAMPLE
     Invoke-IntuneBackupConfigurationPolicy -Path "C:\temp"
@@ -21,7 +24,7 @@ function Invoke-IntuneBackupConfigurationPolicy {
         [Parameter(Mandatory = $false)]
         [ValidateSet("v1.0", "Beta")]
         [string]$ApiVersion = "Beta",
-        $DateFrom,
+        [datetime]$DateFrom,
         $DateTo
     )
 
@@ -38,10 +41,10 @@ function Invoke-IntuneBackupConfigurationPolicy {
 
     # Get all Setting Catalogs Policies
     $configurationPolicies = Invoke-MSGraphRequest -HttpMethod GET -Url "deviceManagement/configurationPolicies" | Get-MSGraphAllPages
-        #if ($DateFrom) {
+        if ($DateFrom) {
             "filtering by date"
             $configurationPolicies = $configurationPolicies | ? {$_.createddatetime -gt $DateFrom}
-        #}
+        }
 
 
     foreach ($configurationPolicy in $configurationPolicies) {
