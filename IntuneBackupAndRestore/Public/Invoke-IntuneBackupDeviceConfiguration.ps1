@@ -20,7 +20,8 @@ function Invoke-IntuneBackupDeviceConfiguration {
 
         [Parameter(Mandatory = $false)]
         [ValidateSet("v1.0", "Beta")]
-        [string]$ApiVersion = "Beta"
+        [string]$ApiVersion = "Beta",
+        [datetime]$DateFrom
     )
 
     # Set the Microsoft Graph API endpoint
@@ -36,6 +37,11 @@ function Invoke-IntuneBackupDeviceConfiguration {
 
     # Get all device configurations
     $deviceConfigurations = Get-DeviceManagement_DeviceConfigurations | Get-MSGraphAllPages
+
+    if ($DateFrom) {
+        "Filtering by date"
+        $deviceConfigurations = $deviceConfigurations | ? {$_.createddatetime -gt $DateFrom}
+    }
     
 
     foreach ($deviceConfiguration in $deviceConfigurations) {

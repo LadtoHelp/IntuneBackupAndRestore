@@ -20,7 +20,9 @@ function Invoke-IntuneBackupConfigurationPolicy {
 
         [Parameter(Mandatory = $false)]
         [ValidateSet("v1.0", "Beta")]
-        [string]$ApiVersion = "Beta"
+        [string]$ApiVersion = "Beta",
+        $DateFrom,
+        $DateTo
     )
 
     # Set the Microsoft Graph API endpoint
@@ -36,6 +38,11 @@ function Invoke-IntuneBackupConfigurationPolicy {
 
     # Get all Setting Catalogs Policies
     $configurationPolicies = Invoke-MSGraphRequest -HttpMethod GET -Url "deviceManagement/configurationPolicies" | Get-MSGraphAllPages
+        #if ($DateFrom) {
+            "filtering by date"
+            $configurationPolicies = $configurationPolicies | ? {$_.createddatetime -gt $DateFrom}
+        #}
+
 
     foreach ($configurationPolicy in $configurationPolicies) {
         $configurationPolicy | Add-Member -MemberType NoteProperty -Name 'settings' -Value @() -Force
